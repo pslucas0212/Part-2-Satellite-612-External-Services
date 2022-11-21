@@ -227,7 +227,7 @@ Configure the firewall for external access to NFS. Clients are configured using 
  --foreman-proxy-plugin-dhcp-remote-isc-dhcp-config /mnt/nfs/etc/dhcp/dhcpd.conf \
  --foreman-proxy-plugin-dhcp-remote-isc-dhcp-leases /mnt/nfs/var/lib/dhcpd/dhcpd.leases \
  --foreman-proxy-plugin-dhcp-remote-isc-key-name=omapi_key \
- --foreman-proxy-plugin-dhcp-remote-isc-key-secret=BWbZEXP3sMp2UHnA81uofNxAyUUEWPV7JlrNmE8p1S+XbKozKPlxDq542NRu2ERq7I/KbacdcMiECIRRoCoEAA== \
+ --foreman-proxy-plugin-dhcp-remote-isc-key-secret=jNSE5YI3H1A8Oj/tkV4...A2ZOHb6zv315CkNAY7DMYYCj48Umw== \
  --foreman-proxy-plugin-dhcp-remote-isc-omapi-port=7911 \
  --enable-foreman-proxy-plugin-dhcp-remote-isc \
  --foreman-proxy-dhcp-server=ns02.example.com
