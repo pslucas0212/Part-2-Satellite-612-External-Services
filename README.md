@@ -3,40 +3,37 @@
 [Tutorial Menu](https://github.com/pslucas0212/RedHat-Satellite-6.12-VM-Provisioning-to-vSphere-Tutorial/blob/main/README.md)
 
 ## Introduction
+In this tutorial we will follow step-by-step instructions to integrate external DNS and DHCP services to a Satellite server. 
 
-In our previous multi-part Satellite tutorial we covered an end-to-end scenario for provisioning RHEL VMs from Satellite to a VMWare cluster.   In that series we had the Satellite installer install and configure both DNS and DHCP services on our Satellite server.  Often you will need to integrate Satellite with an existing "external" DNS and DHCP services in your organization.
-
-In this tutorial we extend our work from the previous tutorial by providing step-by-step instructions to integrate external DNS and DHCP services to a Satellite server. The steps in this example are an extension to our previous multi-part tutorial  [How to provision a RHEL VM from Red Hat Satellite](https://www.redhat.com/en/blog/how-provision-rhel-vm-red-hat-satellite).
-
- Steps for in installing and configuring the base DNS and DHCP services on a separate server for use with this tutorial are covered in the appendix section of this article.  
+Steps for in installing and configuring the base DNS and DHCP services on a separate server for use with this tutorial are covered in the appendix section of this article.  
 
  ## Satellite DNS Integration
 
- First we will want to test DNS updates from the server hosting Satellite. To test DNS updates with nsupdate, you will need the bind utility installed on the Satellite server.  Install or update bind-utils on the client Server as needed.
+ First we will want to test DNS updates from the server hosting Satellite. To test DNS updates with nsupdate, you will need the bind utility installed on the Satellite server.  Check to see if the bind-utils are installed.  If bind-utils is is not installed, then we will Install bind-utils on the Satellite Server.
  ```
- # yum list installed | grep bind-utils
- # yum install bind-utils
+ # dnf list installed | grep bind-utils
+ # yum dnf install bind-utils
   ```   
 
  From the server running named, copy the rndc.key to the Satellite Server and set it up for use with Satellite.
  ```
- # scp root@ns02.example.com:/etc/rndc.key /etc/rndc.key
- # restorecon -v /etc/rndc.key
- # chown -v root:named /etc/rndc.key
- # chmod -v 640 /etc/rndc.key
+ # scp root@ns02.example.com:/etc/rndc.key /etc/foreman-proxy/rndc.key
+ # restorecon -v /etc/foreman-proxy/rndc.key
+ # chown -v root:foreman-proxy /etc/foreman-proxy/rndc.key
+ # chmod -v 640 /etc/foreman-proxy/rndc.key
  ```
  From the Satellite server test an update to the forward zone (add -d to nsupdate command for debug: nsupdate -d -k ...)
  ```
- # echo -e "zone example.com.\n server 10.1.10.253\n update add atest.example.com 3600 IN A 10.1.10.10\n send\n" | nsupdate -k /etc/rndc.key
+ # echo -e "zone example.com.\n server 10.1.10.253\n update add atest.example.com 3600 IN A 10.1.10.10\n send\n" | nsupdate -k /etc/foreman-proxy/rndc.key
  # nslookup atest.example.com
- # echo -e "zone example.com.\n server 10.1.10.253\n update delete atest.example.com 3600 IN A 10.1.10.10\n send\n" | nsupdate -k /etc/rndc.key
+ # echo -e "zone example.com.\n server 10.1.10.253\n update delete atest.example.com 3600 IN A 10.1.10.10\n send\n" | nsupdate -k /etc/foreman-proxy/rndc.key
  ```      
 From the Satellite server test an update to the reverse zone (add -d to nsupdate command for debug: nsupdate -d -k ...)
  ```     
- # echo -e "zone 10.1.10.in-addr.arpa.\n server 10.1.10.253\n update add 10.10.1.10.in-addr.arpa. 300 PTR atest.example.com\n send\n" | nsupdate -k /etc/rndc.key
+ # echo -e "zone 10.1.10.in-addr.arpa.\n server 10.1.10.253\n update add 10.10.1.10.in-addr.arpa. 300 PTR atest.example.com\n send\n" | nsupdate -k /etc/foreman-proxy/rndc.key
  # nslookup 10.1.10.10
  # dig +short -x 10.1.10.10
- # echo -e "zone 10.1.10.in-addr.arpa.\n server 10.1.10.253\n update delete 10.10.1.10.in-addr.arpa. 300 PTR atest.example.com\n send\n" | nsupdate -k /etc/rndc.key
+ # echo -e "zone 10.1.10.in-addr.arpa.\n server 10.1.10.253\n update delete 10.10.1.10.in-addr.arpa. 300 PTR atest.example.com\n send\n" | nsupdate -k /etc/foreman-proxy/rndc.key
  ```
  ****Note**** - Typically the forward and reverse zone files are "permanently" updated around 15 minutes after the DNS update is issued from the client machine.
 
