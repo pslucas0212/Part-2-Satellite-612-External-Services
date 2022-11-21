@@ -52,20 +52,6 @@ Finally you run the following satellite-installer command to make the changes pe
  # systemctl restart foreman-proxy
  ```
 
-Next login into the Satellite console and make sure that you have the Operations Department chosen for the Organization and moline chosen for the location. Now choose Infrastructure -> Subnets from the side menu.
-
-![Infrastucture -> Subnets](/images/sat01.png)
-
-On the Subnets page click on the link for the sn-operations-department subnet.
-
-![Subnets -> sn-operations-department](/images/sat02.png)
-
-On the Subnets > sn-operations-department (10.1.10.0/24) update the Primary DNS Server field to match the IP address of the external DNS server, and Click the Submit button.
-
-![sn-operations-department -> Primary DNS Server](/images/sat03.png)
-
-
-
 ## Satellite DHCP Integration
 
 For Satellite to interact with an external DHCP service you will need to share the DHCP configuration and lease files with the Satellite Server.  In this example we are using NFS to share the configuration and lease files, and I have provided step-by-step instructions on enabling NFS services on both the server hosting DHCP and the Satellite server.
@@ -94,16 +80,17 @@ For Satellite to interact with an external DHCP service you will need to share t
 
  On the Satellite server gather foreman user UID and GID.
  ```
- # id -u foreman
- 987
- # id -g foreman
- 981
+# id -u foreman
+975
+# id -g foreman
+974
+
  ```
 
  On the server hosting DNS and DHCP services create the foreman userid and group.
  ```
- # groupadd -g 981 foreman
- # useradd -u 987 -g 981 -s /sbin/nologin foreman
+ # groupadd -g 974 foreman
+ # useradd -u 975 -g 974 -s /sbin/nologin foreman
  ```
 
  Restore the read and execute flags.
@@ -115,7 +102,7 @@ For Satellite to interact with an external DHCP service you will need to share t
 
  On the server hosting the DHCP service, export the DHCP configuration and lease files using NFS.
  ```
- # yum install nfs-utils
+ # dnf install nfs-utils
  ...
  complete!
  # systemctl enable rpcbind nfs-server
@@ -151,10 +138,17 @@ For Satellite to interact with an external DHCP service you will need to share t
  # exportfs -rva
  ```
 
- Configure the firewall for the DHCP omapi port 7911:
+ Configure the firewall for DHCP:
  ```
  # firewall-cmd --add-port="7911/tcp" \
- && firewall-cmd --runtime-to-permanent
+&& firewall-cmd --runtime-to-permanent
+ success
+ success
+ ```
+ Configure the firewall for the DHCP omapi port 7911:
+ ```
+ # firewall-cmd --add-service dhcp \
+&& firewall-cmd --runtime-to-permanent
  success
  success
  ```
@@ -208,11 +202,9 @@ Configure the firewall for external access to NFS. Clients are configured using 
 
  Add the following lines to the /etc/fstab file:
  ```
- ns02.example.com:/exports/etc/dhcp /mnt/nfs/etc/dhcp nfs
- ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcp_etc_t:s0" 0 0
+ ns02.example.com:/exports/etc/dhcp /mnt/nfs/etc/dhcp nfs ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcp_etc_t:s0" 0 0
 
- ns02.example.com:/exports/var/lib/dhcpd /mnt/nfs/var/lib/dhcpd nfs
- ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcpd_state_t:s0" 0 0
+ ns02.example.com:/exports/var/lib/dhcpd /mnt/nfs/var/lib/dhcpd nfs ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcpd_state_t:s0" 0 0
  ```
 
  Mount the file systems on /etc/fstab:
@@ -235,7 +227,7 @@ Configure the firewall for external access to NFS. Clients are configured using 
  --foreman-proxy-plugin-dhcp-remote-isc-dhcp-config /mnt/nfs/etc/dhcp/dhcpd.conf \
  --foreman-proxy-plugin-dhcp-remote-isc-dhcp-leases /mnt/nfs/var/lib/dhcpd/dhcpd.leases \
  --foreman-proxy-plugin-dhcp-remote-isc-key-name=omapi_key \
- --foreman-proxy-plugin-dhcp-remote-isc-key-secret=jNSE5YI3H1A8Oj/tkV4...A2ZOHb6zv315CkNAY7DMYYCj48Umw=== \
+ --foreman-proxy-plugin-dhcp-remote-isc-key-secret=BWbZEXP3sMp2UHnA81uofNxAyUUEWPV7JlrNmE8p1S+XbKozKPlxDq542NRu2ERq7I/KbacdcMiECIRRoCoEAA== \
  --foreman-proxy-plugin-dhcp-remote-isc-omapi-port=7911 \
  --enable-foreman-proxy-plugin-dhcp-remote-isc \
  --foreman-proxy-dhcp-server=ns02.example.com
@@ -256,14 +248,14 @@ Satellite provides you all the components you need to easily and efficiently pro
 
  ## Appendix
 
- **Note:** For this example tutorial, the DNS and DHCP services are running on a RHEL 8.5 server VM. For this example the subnet is 10.1.10.0/24 and domain is example.com which are derived from the previous Satellite tutorial.
+ **Note:** For this example tutorial, the DNS and DHCP services are running on a RHEL 8.7 server VM. For this example the subnet is 10.1.10.0/24 and domain is example.com.
 
 
  ### Install named and dhcpd
 
  We will install named, the bind utilities, the dns caching server and dhcpd.
  ```
- # sudo yum -y install bind* caching* dhcp*
+ # sudo dnf -y install bind* caching* dhcp*
  ...
  Complete!
  ```
