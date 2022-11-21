@@ -37,18 +37,13 @@ From the Satellite server test an update to the reverse zone (add -d to nsupdate
  ```
  ****Note**** - Typically the forward and reverse zone files are "permanently" updated around 15 minutes after the DNS update is issued from the client machine.
 
- Assign the foreman-proxy user to the named group manually. 
- ```
- usermod -a -G named foreman-proxy
- ```
-
 Finally you run the following satellite-installer command to make the changes persistent to the /etc/foreman-proxy/settings.d/dns.yml file.
  ```
  # satellite-installer --foreman-proxy-dns=true \
  --foreman-proxy-dns-managed=false \
  --foreman-proxy-dns-provider=nsupdate \
  --foreman-proxy-dns-server="10.1.10.253" \
- --foreman-proxy-keyfile=/etc/rndc.key \
+ --foreman-proxy-keyfile=/etc/foreman-proxy/rndc.key \
  --foreman-proxy-dns-ttl=86400
  ```
 
