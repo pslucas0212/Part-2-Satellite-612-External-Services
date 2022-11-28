@@ -1,6 +1,6 @@
 # Part 2: Red Hat Satellite 6.12 - DNS and DHCP Integration
 
-[Tutorial Menu](https://github.com/pslucas0212/RedHat-Satellite-6.12-VM-Provisioning-to-vSphere-Tutorial/blob/main/README.md)
+[Tutorial Menu](https://github.com/pslucas0212/RedHat-Satellite-6.12-VM-Provisioning-to-vSphere-Tutorial)
 
 ## Introduction
 In this tutorial we will follow step-by-step instructions to integrate external DNS and DHCP services to a Satellite server. 
