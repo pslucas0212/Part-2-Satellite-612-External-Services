@@ -389,7 +389,41 @@ Satellite provides you all the components you need to easily and efficiently pro
  sat01			A	10.1.10.254
  ```
 
+## Configuring dhcpd
+#### dhcpd.conf
+I made additions to the dhcpd.conf file below the section title "# example.com"
+```
+#
+# DHCP Server Configuration file.
+#   see /usr/share/doc/dhcp-server/dhcpd.conf.example
+#   see dhcpd.conf(5) man page
+#
+omapi-port 7911;
+key omapi_key {
+	algorithm HMAC-MD5;
+	secret "BWb...EAA==";
+};
+omapi-key omapi_key;
 
+default-lease-time 43200;
+max-lease-time 86400;
+log-facility local7;
+
+# example.com
+subnet 10.1.10.0 netmask 255.255.255.0 {
+  pool
+  {
+    range 10.1.10.101 10.1.10.199;
+  }
+
+  option subnet-mask 255.255.255.0;
+  option routers 10.1.10.1;
+  option domain-name "example.com";
+  option domain-name-servers 10.1.10.253;
+  option domain-search "example.com";
+  option domain-name "example.com";
+}
+```
 
 
  ## References
