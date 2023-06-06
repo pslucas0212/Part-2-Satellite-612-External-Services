@@ -391,6 +391,10 @@ Satellite provides you all the components you need to easily and efficiently pro
 
 Setup named as a service
 ```
+# systemctl start named.service
+# systemctl enable named.service
+Created symlink /etc/systemd/system/multi-user.target.wants/named.service → /usr/lib/systemd/system/named.service.
+```
 
 ## Configuring dhcpd
 #### dhcpd.conf
