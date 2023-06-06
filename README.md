@@ -389,6 +389,9 @@ Satellite provides you all the components you need to easily and efficiently pro
  sat01			A	10.1.10.254
  ```
 
+Setup named as a service
+```
+
 ## Configuring dhcpd
 #### dhcpd.conf
 I made additions to the dhcpd.conf file below the section title "# example.com"
