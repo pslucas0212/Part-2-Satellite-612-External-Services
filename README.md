@@ -1,6 +1,6 @@
-# Part 2: Red Hat Satellite 6.12 - DNS and DHCP Integration
+# Part 2: Red Hat Satellite 6.16 - DNS and DHCP Integration
 
-[Tutorial Menu](https://github.com/pslucas0212/RedHat-Satellite-6.12-VM-Provisioning-to-vSphere-Tutorial)
+[Tutorial Menu](https://github.com/pslucas0212/RedHat-Satellite-6.16-VM-Provisioning-to-vSphere-Tutorial)
 
 ## Introduction
 In this tutorial we will follow step-by-step instructions to integrate external DNS and DHCP services to a Satellite server. 
@@ -434,7 +434,7 @@ subnet 10.1.10.0 netmask 255.255.255.0 {
 
 
  ## References
- - [Chapter 5. Configuring Satellite Server with External Services](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.12/html/installing_satellite_server_in_a_connected_network_environment/configuring-external-services))
+ - [Chapter 5. Configuring Satellite Server with External Services](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.16/html/installing_satellite_server_in_a_connected_network_environment/configuring-external-services))
  - [How to configure the BIND DNS service](https://access.redhat.com/solutions/40683)
  - [How to configure Dynamic DNS Server on AlmaLinux / Rocky Linux](https://www.techbrown.com/configure-dynamic-dns-server-almalinux-rocky-linux/)
 
